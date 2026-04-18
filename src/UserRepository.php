@@ -1,4 +1,5 @@
 <?php
+namespace Tsimib\UsersCli;
 class UserRepository
 {
     private string $filePath;

@@ -1,5 +1,5 @@
 <?php
-
+namespace Tsimib\UsersCli;
 class User
 {
     private int $id;

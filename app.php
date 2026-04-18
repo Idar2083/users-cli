@@ -1,8 +1,9 @@
 <?php
-require 'src/UserRepository.php';
+
+require 'vendor/autoload.php';
+use Tsimib\UsersCli\UserRepository;
 
 $repository = new UserRepository("users.json");
-
 $command = $argv[1] ?? null;
 $argument = $argv[2] ?? null;
 

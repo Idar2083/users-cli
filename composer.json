@@ -1,0 +1,15 @@
+{
+    "name": "tsimib/users-cli",
+    "autoload": {
+        "psr-4": {
+            "Tsimib\\UsersCli\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Idar Tsymzhitov",
+            "email": "jihannaxz1@gmail.com"
+        }
+    ],
+    "require": {}
+}

@@ -8,22 +8,27 @@ $command = $argv[1] ?? null;
 $argument = $argv[2] ?? null;
 
 if($command === 'users:list') {
-    print_r($repository->getAllUsers());
+    $users = ($repository->getAllUsers());
+    print_r($users);
 
 } elseif ($command === 'users:add') {
 
-    print_r($repository->addUser($argument));
     if (!$argument) {
-        echo "Missing user name";
+        echo "Missing user name\n";
+        exit(1);
     }
+    $repository->addUser($argument);
+    echo "User added\n";
 
 } elseif ($command === 'users:delete') {
 
-    print_r($repository->deleteUser($argument));
     if (!$argument) {
-        echo "Missing user ID";
+        echo "Missing user ID\n";
+        exit(1);
     }
+    $repository->deleteUser((int)$argument);
+    echo "User deleted\n";
 
 } else {
-    echo "Unknown command";
+    echo "Unknown command\n";
 }

@@ -2,16 +2,11 @@
 namespace Tsimib\UsersCli;
 class User
 {
-    private int $id;
-    private string $name;
-    private string $email;
-
-    public function __construct(int $id, string $name, string $email)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-    }
+    public function __construct(
+        private readonly int $id,
+        private readonly string $name,
+        private readonly string $email
+    ) {}
 
     public function getId(): int
     {

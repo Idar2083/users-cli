@@ -15,6 +15,7 @@ class MysqlUserRepository implements UserRepositoryInterface
 
     public function addUser(string $name): array
     {
+
         $stmt = $this->pdo->prepare("INSERT INTO users (name) VALUES (:name)");
         $stmt->execute(['name' => $name]);
 

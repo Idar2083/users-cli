@@ -1,13 +1,8 @@
 <?php
 namespace Tsimib\UsersCli;
-class JsonUserRepository
+class JsonUserRepository implements UserRepositoryInterface
 {
-    private string $filePath;
-    public function __construct(string $filePath)
-    {
-        $this->filePath = $filePath;
-    }
-
+    public function __construct(private string $filePath) {}
     public function getAllUsers(): array
     {
         $data = file_get_contents($this->filePath);
@@ -16,11 +11,7 @@ class JsonUserRepository
             return [];
         }
 
-        try {
-            return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            return [];
-        }
+        return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function addUser(string $name): array
@@ -37,17 +28,11 @@ class JsonUserRepository
 
         $users[] = $newUser;
 
-        try {
         $json = json_encode($users, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
         if (file_put_contents($this->filePath, $json) === false) {
             throw new \RuntimeException('Unable to write to file');
         }
 
-        } catch (\JsonException $e) {
-            echo "JSON error : " . $e->getMessage();
-        } catch (\RuntimeException $e) {
-            echo "File error : " . $e->getMessage();
-        }
         return $newUser;
     }
 
@@ -59,16 +44,9 @@ class JsonUserRepository
 
         $newUsers = array_values($newUsers);
 
-        try {
-            $json = json_encode($newUsers, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
-            if (file_put_contents($this->filePath, $json) === false) {
-                throw new \RuntimeException('Unable to write to file');
-            }
-
-        } catch (\JsonException $e) {
-            echo "JSON error : " . $e->getMessage();
-        } catch (\RuntimeException $e) {
-            echo "File error : " . $e->getMessage();
+        $json = json_encode($newUsers, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        if (file_put_contents($this->filePath, $json) === false) {
+            throw new \RuntimeException('Unable to write to file');
         }
 
         return $newUsers;

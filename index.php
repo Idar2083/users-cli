@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 
 use Tsimib\UsersCli\JsonUserRepository;
 use Tsimib\UsersCli\MysqlUserRepository;
+use function Tsimib\UsersCli\createRepository;
 
 // .env
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -11,20 +12,7 @@ $dotenv->load();
 
 $source = $_ENV['DB_SOURCE'] ?? 'json';
 
-if ($source === 'mysql') {
-
-    $pdo = new PDO (
-        "mysql:host={$_ENV['DB_HOST']};dbname={$_ENV['DB_NAME']}",
-        $_ENV['DB_USER'],
-        $_ENV['DB_PASSWORD']
-    );
-
-    $repository = new MysqlUserRepository($pdo);
-
-} else {
-    $repository = new JsonUserRepository(__DIR__ . '/users.json');
-}
-
+$repository = createRepository($source);
 // CLI
 $command = $argv[1] ?? null;
 $argument = $argv[2] ?? null;
@@ -36,21 +24,21 @@ if($command === 'users:list') {
 } elseif ($command === 'users:add') {
 
     if (empty($argument)) {
-        echo "Missing user name\n";
+        echo "Missing user name" . PHP_EOL;
         exit(1);
     }
     $repository->addUser($argument);
-    echo "User added\n";
+    echo "User added" . PHP_EOL;
 
 } elseif ($command === 'users:delete') {
 
     if (empty($argument)) {
-        echo "Missing user ID\n";
+        echo "Missing user ID" . PHP_EOL;
         exit(1);
     }
     $repository->deleteUser((int)$argument);
-    echo "User deleted\n";
+    echo "User deleted" . PHP_EOL;
 
 } else {
-    echo "Unknown command\n";
+    echo "Unknown command" . PHP_EOL;
 }

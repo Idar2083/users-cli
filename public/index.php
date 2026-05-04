@@ -1,6 +1,5 @@
 <?php
-require_once "../vendor/autoload.php";
-require_once "../src/RepositoryFactory.php";
+require_once __DIR__ . "../vendor/autoload.php";
 
 use function Tsimib\UsersCli\createRepository;
 
@@ -15,11 +14,13 @@ $method = $_SERVER["REQUEST_METHOD"];
 $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 if ($method === "GET" && $uri === '/users') {
+    http_response_code(200);
     echo json_encode($repository->getAllUsers(), JSON_PRETTY_PRINT);
     exit;
 }
 
 if ($method === "POST" && $uri === '/users') {
+
     $input = json_decode(file_get_contents('php://input'), true);
 
     if (empty($input['name'])) {
@@ -35,20 +36,25 @@ if ($method === "POST" && $uri === '/users') {
     exit;
 }
 
-if ($method === "DELETE" && $uri === '/users') {
-    $id = $_GET['id'] ?? null;
+if ($method === "DELETE") {
 
-    if (!$id) {
-        http_response_code(400);
-        echo json_encode(['error' => 'ID is required']);
+    $parts = explode('/', $uri);
+
+    if (count($parts) === 3 && $parts[1] === 'users') {
+
+        $id = (int)$parts[2];
+
+        if (!$id) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid ID']);
+            exit;
+        }
+
+        $repository->deleteUser($id);
+
+        http_response_code(204);
         exit;
     }
-
-    $repository->deleteUser((int)$id);
-
-    http_response_code(204);
-    echo json_encode(['status' => 'deleted']);
-    exit;
 }
 
 http_response_code(404);
